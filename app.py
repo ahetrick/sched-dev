@@ -26,7 +26,7 @@ id_appt = 165
 
 validate_user_appt = check_user_appt(id_person,id_appt)
 
-#120 is maximum number of users per each block; 2 here for demo
+#120 is maximum number of users per each hour block (60 per 30 minute block); 2 here for demo
 #2 is the maximum number of appointments per user per week
 if validate_user_appt[0] == 2:
      print('The appointment block has reached maximum capacity. Please choose another block in a different week.')
