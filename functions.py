@@ -44,7 +44,7 @@ def populate_tables():
         df = pd.read_csv (r'./{}.csv'.format(i[0]))
         df.to_sql(i[1], conn, if_exists='append', index = False)
         conn.commit() 
-    return "DB population complete"
+    print( "DB population complete")
 
 def confirm_populate():
     for i in ['USERS','LOCATIONS','APPOINTMENTS']:
