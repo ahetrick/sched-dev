@@ -96,7 +96,7 @@ def show_available_appts():
     FROM USER_APPOINTMENTS
     GROUP BY
         appointment
-    HAVING COUNT(appointment) >= 120)
+    HAVING COUNT(appointment) >= 60)
     ''')
     results = cur.fetchall()
     available = [(row['id'], row['date'], row['time'], row['location']) for row in results]
