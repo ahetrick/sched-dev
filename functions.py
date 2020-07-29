@@ -10,8 +10,18 @@ conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
 def daterange(start_date, end_date):
-    for n in range(int ((end_date - start_date).days)):
-        yield start_date + timedelta(n)
+    weekdays = []
+    delta = timedelta(days=1)
+    d = start_date
+    diff = 0
+    weekend = set([5, 6])
+    while d <= end_date:
+        if d.weekday() not in weekend:
+            weekdays.append(d)
+            diff += 1
+        d += delta
+    for i in weekdays:
+        yield i
 
 def make_shifts(num_locations):
     shifts = []
@@ -24,15 +34,10 @@ def make_shifts(num_locations):
         for single_date in daterange(start_date, end_date):
             for single_time in make_time:
                 shifts.append((single_date, single_time, single_date.isocalendar()[1], i))
-    #remove weekends
-    aug_weekends = [date(2020, 8, 1), date(2020, 8, 2), date(2020, 8, 9), date(2020, 8, 10), 
-                    date(2020, 8, 15), date(2020, 8, 16), date(2020, 8, 22), date(2020, 8, 23),
-                    date(2020, 8, 29), date(2020, 8, 30)]
-    weekdays = [i for i in shifts if i[0] not in aug_weekends]
     with open('shifts.csv', 'w', newline='') as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerow(['date', 'time', 'week', 'location'])
-        writer.writerows(weekdays)
+        writer.writerows(shifts)
 
 def populate_tables():
     for i in zip(['users','locations','shifts'],['USERS','LOCATIONS','APPOINTMENTS']):
@@ -119,4 +124,5 @@ def cancel_appointment(person_id, shift_id):
      and appointment = (?)''', (person_id, shift_id,) )
      conn.commit()
      print('Your appointment has been cancelled.')
-     
+
+
